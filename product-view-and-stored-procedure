@@ -1,0 +1,47 @@
+create database demo;
+use demo;
+create table Products(
+    id int not null ,
+    code varchar(255) not null ,
+    name varchar(255) not null,
+    price double not null,
+    amount int not null ,
+    description varchar(255) not null,
+    status varchar(255) not null
+);
+alter table Products add unique (code);
+alter table Products add index (name,price);
+insert into Products values (1,'G01','Plash Speeder',600,10,'Wifi router','In stock'),
+                            (2,'G02','Normal Router',100,10,'Wifi Router','In stock'),
+                            (3,'C01','T-Shirt',5,100,'Clothes','In stock');
+explain select * from Products where (name = 'Plash Speeder' and price = 600);
+create view productCode as
+select code
+from Products;
+create view productName as
+    select name from Products;
+create view productPrice as
+    select price from Products;
+create view productStatus as
+    select status from Products;
+alter view productStatus as
+    select status from Products group by status;
+drop view productPrice ;
+create procedure showAllProduct()
+begin
+    select * from Products;
+end;
+call showAllProduct();
+create procedure addProduct(in productId int , productCode varchar(255),productName varchar(255),productPrice double, productAmount int, productDescription varchar(255), productStatus varchar(255))
+begin
+    insert into Products value (productId,productCode,productName,productPrice,productAmount,productDescription,productStatus);
+end;
+call addProduct(4,'T01','Toy Car',10,25,'Car','Not for sale');
+call showAllProduct();
+create procedure deleteProduct(in productId int )
+begin
+    delete from Products
+        where id = productId;
+end;
+call deleteProduct(3);
+call showAllProduct();
